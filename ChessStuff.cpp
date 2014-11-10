@@ -545,7 +545,7 @@ bool Queen::canMove(int moveX, int moveY) // this Queen can move to (moveX, move
 		return false;
 }
 	
-bool King::castling(int type) // Special Rule 2. Castling
+bool King::castling(PCTYPE type) // Special Rule 2. Castling
 {
 	switch(type)
 	{
@@ -562,6 +562,11 @@ bool King::castling(int type) // Special Rule 2. Castling
 
 bool King::checkCheck()
 {
+	switch(this->getOwner())
+	{
+		case WHITE:
+			if(board->isEmpty(getPosX())
+	}
 	return isCheck;
 }
 
