@@ -6,13 +6,13 @@ using namespace std;
 void Display(ChessBoard* board); // Capital letter : WHITE, Small letter : BLACK
 
 int main(){
-	ChessBoard board;
+	ChessBoard* board = ChessBoard::getInstance();
 
 	char input;
 
 	while(true)
 	{
-		Display(&board);
+		Display(board);
 
 		cout << "Choose one(q, m)" << endl;
 		cin >> input;
@@ -33,7 +33,7 @@ int main(){
 			int x2, y2;
 			cin >> x2 >> y2;
 
-			board.move(x1, y1, x2, y2);
+			board->move(x1, y1, x2, y2);
 		}
 	}
 }
