@@ -1,6 +1,10 @@
 #include <iostream>
 #include "ChessStuff.h"
 
+ChessBoard* ChessBoard::instance = NULL;
+
+ChessBoard* board;
+
 //------------------------------------------------------------------Board Part---------------------------------------------------------------------
 ChessBoard::ChessBoard() // ChessBoard Constructor
 {
@@ -104,12 +108,12 @@ void ChessBoard::move(int posX, int posY, int moveX, int moveY) // Move Piece fr
 
 	switch(piece->getType())
 	{
-		case PAWN: canMove = ((Pawn*)piece)->canMove(moveX, moveY, this); break;
-		case ROOK: canMove = ((Rook*)piece)->canMove(moveX, moveY, this); break;
-		case KNIGHT: canMove = ((Knight*)piece)->canMove(moveX, moveY, this);	break;			
-		case BISHOP: canMove = ((Bishop*)piece)->canMove(moveX, moveY, this); break;
-		case QUEEN: canMove = ((Queen*)piece)->canMove(moveX, moveY, this); break;
-		case KING: canMove = ((King*)piece)->canMove(moveX, moveY, this); break;
+		case PAWN: canMove = ((Pawn*)piece)->canMove(moveX, moveY); break;
+		case ROOK: canMove = ((Rook*)piece)->canMove(moveX, moveY); break;
+		case KNIGHT: canMove = ((Knight*)piece)->canMove(moveX, moveY);	break;			
+		case BISHOP: canMove = ((Bishop*)piece)->canMove(moveX, moveY); break;
+		case QUEEN: canMove = ((Queen*)piece)->canMove(moveX, moveY); break;
+		case KING: canMove = ((King*)piece)->canMove(moveX, moveY); break;
 	}
 
 	if(canMove)
@@ -146,12 +150,12 @@ void ChessBoard::move(int posIndex, int moveIndex) // Move Piece from (posX, pos
 
 	switch(piece->getType())
 	{
-		case PAWN: canMove = ((Pawn*)piece)->canMove(moveX, moveY, this); break;
-		case ROOK: canMove = ((Rook*)piece)->canMove(moveX, moveY, this); break;
-		case KNIGHT: canMove = ((Knight*)piece)->canMove(moveX, moveY, this);	break;			
-		case BISHOP: canMove = ((Bishop*)piece)->canMove(moveX, moveY, this); break;
-		case QUEEN: canMove = ((Queen*)piece)->canMove(moveX, moveY, this); break;
-		case KING: canMove = ((King*)piece)->canMove(moveX, moveY, this); break;
+		case PAWN: canMove = ((Pawn*)piece)->canMove(moveX, moveY); break;
+		case ROOK: canMove = ((Rook*)piece)->canMove(moveX, moveY); break;
+		case KNIGHT: canMove = ((Knight*)piece)->canMove(moveX, moveY);	break;			
+		case BISHOP: canMove = ((Bishop*)piece)->canMove(moveX, moveY); break;
+		case QUEEN: canMove = ((Queen*)piece)->canMove(moveX, moveY); break;
+		case KING: canMove = ((King*)piece)->canMove(moveX, moveY); break;
 	}
 
 	if(canMove)
@@ -201,7 +205,7 @@ bool Pawn::enPassant() // Special Rule 1. En Passant.
 	return false;
 }
 
-bool Pawn::canMove(int moveX, int moveY, ChessBoard* board) // this Pawn can move to (moveX, moveY)?
+bool Pawn::canMove(int moveX, int moveY) // this Pawn can move to (moveX, moveY)?
 {
 	if(moveX < 0 || moveY < 0 || moveX > 7 || moveY > 7) // if moveX or moveY is out of board
 		return false;
@@ -291,7 +295,7 @@ bool Pawn::canMove(int moveX, int moveY, ChessBoard* board) // this Pawn can mov
 	}
 }
 
-bool Rook::canMove(int moveX, int moveY, ChessBoard* board) // this Rook can move to (moveX, moveY)?
+bool Rook::canMove(int moveX, int moveY) // this Rook can move to (moveX, moveY)?
 {
 	if(moveX < 0 || moveY < 0 || moveX > 7 || moveY > 7) // out of board
 		return false;
@@ -353,7 +357,7 @@ bool Rook::canMove(int moveX, int moveY, ChessBoard* board) // this Rook can mov
 	return true;
 }
 
-bool Knight::canMove(int moveX, int moveY, ChessBoard* board) // this Knight can move to (moveX, moveY)?
+bool Knight::canMove(int moveX, int moveY) // this Knight can move to (moveX, moveY)?
 {
 	if(moveX < 0 || moveY < 0 || moveX > 7 || moveY > 7) // out of board
 		return false;
@@ -368,7 +372,7 @@ bool Knight::canMove(int moveX, int moveY, ChessBoard* board) // this Knight can
 		return true;
 }
 	
-bool Bishop::canMove(int moveX, int moveY, ChessBoard* board) // this Bishop can move to (moveX, moveY)?
+bool Bishop::canMove(int moveX, int moveY) // this Bishop can move to (moveX, moveY)?
 {
 	if(moveX < 0 || moveY < 0 || moveX > 7 || moveY > 7) // out of board
 		return false;
@@ -430,7 +434,7 @@ bool Bishop::canMove(int moveX, int moveY, ChessBoard* board) // this Bishop can
 		return false;
 }
 	
-bool Queen::canMove(int moveX, int moveY, ChessBoard* board) // this Queen can move to (moveX, moveY)?
+bool Queen::canMove(int moveX, int moveY) // this Queen can move to (moveX, moveY)?
 {
 	if(moveX < 0 || moveY < 0 || moveX > 7 || moveY > 7) // out of board
 		return false;
@@ -556,7 +560,12 @@ bool King::castling(int type) // Special Rule 2. Castling
 	}
 }
 
-bool King::canMove(int moveX, int moveY, ChessBoard* board) // this King can move to (moveX, moveY)?
+bool King::checkCheck()
+{
+	return isCheck;
+}
+
+bool King::canMove(int moveX, int moveY) // this King can move to (moveX, moveY)?
 {
 	if(moveX < 0 || moveY < 0 || moveX > 7 || moveY > 7) // out of board;
 		return false;

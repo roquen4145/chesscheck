@@ -7,8 +7,6 @@ enum PCTYPE {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
 enum PLAYER {WHITE, BLACK};
 //WHITE is Upside Player, BLACK is Downside Player.
 
-class ChessBoard;
-
 class ChessPiece{
 private:
 	int posX;
@@ -22,18 +20,25 @@ public:
 
 	int getPosX(){return posX;}
 	int getPosY(){return posY;}
-	int getOwner(){return owner;}
-	int getType(){return type;}
+	PLAYER getOwner(){return owner;}
+	PCTYPE getType(){return type;}
 
-	virtual bool canMove(int MoveX, int moveY, ChessBoard* board) = 0;
+	virtual bool canMove(int MoveX, int moveY) = 0;
 };
 
 class ChessBoard{
 private:
 	ChessPiece* Map[8][8];
+	static ChessBoard* instance;
+	ChessBoard();
 
 public:
-	ChessBoard();
+	static ChessBoard* getInstance(){
+		if (instance == NULL)
+			instance = new ChessBoard;
+
+		return instance;
+	}
 	~ChessBoard();
 
 	ChessPiece* operator[]( const int index )
@@ -44,7 +49,7 @@ public:
 		int x = index%8;
 		int y = index/8;
 		return this->Map[x][y];
-	} 
+	}
 
 	bool isEmpty(int x, int y); // Map[x][y] is empty?
 	bool isEmpty(int index); // Map[index] is empty?
@@ -73,7 +78,7 @@ private:
 public:
 	Pawn(int x, int y, PLAYER player){initPiece(x, y, player, PAWN); isMove = false;}
 	void promotion(ChessBoard* board); // Pawn Promotion
-	bool canMove(int moveX, int moveY, ChessBoard* board); // this Pawn can move to (moveX, moveY)?
+	bool canMove(int moveX, int moveY); // this Pawn can move to (moveX, moveY)?
 };
 
 class Rook:public ChessPiece{
@@ -83,25 +88,25 @@ private:
 public:
 	Rook(int x, int y, PLAYER player){initPiece(x, y, player, ROOK); isMove = false;}
 	bool isMoved(){return isMove;}
-	bool canMove(int moveX, int moveY, ChessBoard* board); // this Rook can move to (moveX, moveY)?
+	bool canMove(int moveX, int moveY); // this Rook can move to (moveX, moveY)?
 };
 
 class Knight:public ChessPiece{
 public:
 	Knight(int x, int y, PLAYER player){initPiece(x, y, player, KNIGHT);}
-	bool canMove(int moveX, int moveY, ChessBoard* board); // this Knight can move to (moveX, moveY)?
+	bool canMove(int moveX, int moveY); // this Knight can move to (moveX, moveY)?
 };
 
 class Bishop:public ChessPiece{
 public:
 	Bishop(int x, int y, PLAYER player){initPiece(x, y, player, BISHOP);}
-	bool canMove(int moveX, int moveY, ChessBoard* board); // this Bishop can move to (moveX, moveY)?
+	bool canMove(int moveX, int moveY); // this Bishop can move to (moveX, moveY)?
 };
 
 class Queen:public ChessPiece{
 public:
 	Queen(int x, int y, PLAYER player){initPiece(x, y, player, QUEEN);}
-	bool canMove(int moveX, int moveY, ChessBoard* board); // this Queen can move to (moveX, moveY)?
+	bool canMove(int moveX, int moveY); // this Queen can move to (moveX, moveY)?
 };
 
 class King:public ChessPiece{
@@ -114,8 +119,10 @@ private:
 public:
 	King(int x, int y, PLAYER player){initPiece(x, y, player, KING); isMove = false; isCheck = false;}
 	bool isChecked(){return isCheck;}
-	bool checkCheck
-	bool canMove(int moveX, int moveY, ChessBoard* board); // this King can move to (moveX, moveY)?
+	bool checkCheck();
+	bool canMove(int moveX, int moveY); // this King can move to (moveX, moveY)?
 };
+
+extern ChessBoard* board;
 
 #endif
